@@ -1,0 +1,15 @@
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\Assembly-CSharp.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\Assembly-CSharp.pdb
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\pomelo-dotnetClient.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\SimpleJson.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\UnityEditor.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\UnityEngine.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\UnityEngine.UI.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\Mono.Cecil.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\Unity.SerializationLogic.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\Unity.DataContract.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+D:\Programming\Dagger\client\Dagger\Temp\bin\Debug\Unity.CecilTools.dll
+D:\Programming\Dagger\client\Dagger\obj\Debug\Assembly-CSharp-vs.csprojResolveAssemblyReference.cache
+D:\Programming\Dagger\client\Dagger\obj\Debug\Assembly-CSharp.dll
+D:\Programming\Dagger\client\Dagger\obj\Debug\Assembly-CSharp.pdb

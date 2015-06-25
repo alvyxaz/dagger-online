@@ -1,0 +1,30 @@
+{
+  "name": "DaggerServer",
+  "version": "1.0.0",
+  "description": "Server of  the game Dagger",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "colors": "^1.1.0",
+    "crypto-js": "^3.1.5",
+    "fs": "0.0.2",
+    "gulp": "^3.8.11",
+    "gulp-insert": "^0.4.0",
+    "gulp-mocha": "^2.1.2",
+    "gulp-replace": "^0.5.3",
+    "gulp-watch": "^4.2.4",
+    "lodash": "^3.9.3",
+    "mocha": "^2.2.5",
+    "mongodb": "^2.0.33",
+    "mongoose": "^4.0.4",
+    "socket.io": "^1.3.5",
+    "socket.io-client": "^1.3.5",
+    "ws": "^0.7.2"
+  },
+  "dependencies": {}
+}
