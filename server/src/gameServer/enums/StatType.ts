@@ -9,3 +9,5 @@ enum StatType {
     Intelligence,
     Mentality
 }
+
+export = StatType;

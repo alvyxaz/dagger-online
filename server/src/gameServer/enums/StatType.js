@@ -6,4 +6,5 @@ var StatType;
     StatType[StatType["Intelligence"] = 3] = "Intelligence";
     StatType[StatType["Mentality"] = 4] = "Mentality";
 })(StatType || (StatType = {}));
+module.exports = StatType;
 //# sourceMappingURL=StatType.js.map
