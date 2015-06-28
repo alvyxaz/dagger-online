@@ -1,7 +1,7 @@
 /**
  * Created by Alvys on 2015-05-29.
  */
-/// <reference path='../../types' />
+/// <reference path='../../types.ts' />
 
 import MessageHandler = require('../../core/messages/MessageHandler');
 import ParameterCode = require('../../common/ParameterCode');
@@ -10,7 +10,7 @@ import GatewayServer = require('../GatewayServer');
 import Sockets = require('../../core/connections/Sockets');
 
 class ClientMessageHandler implements MessageHandler<MessageCode, Object>{
-    protected server : GatewayServer;
+    public server : GatewayServer;
 
     constructor(server : GatewayServer) {
         this.server = server;
