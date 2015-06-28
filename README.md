@@ -4,18 +4,22 @@ A stab at making an online game with node.js backend. Why node.js? Because it's 
 easy to prototype with, easy to scale, and cheap to host
 
 ##Development Progress
-### Client:
- * Connect to Gateway Server :white_check_mark:
- * Login to Gateway Server :white_check_mark:
- * Connect to Game Server (through Connector) :white_check_mark:
- * Gameplay:
-   * Entering a Game World :o: (Waiting for server side to be ready)
- 
-### Server
-* Gateway Server :white_check_mark:
-* Connector Server :white_check_mark:
-* Game Server 
-  * Game Object (Generic entity) :o: 
+
+:white_check_mark: - done/ good enough to allow going further
+:o: - currently working on
+
+### Connection Related
+* :white_check_mark: Player connecting to gateway
+* :white_check_mark: Player registration
+* :white_check_mark: Player login
+* :white_check_mark: Connect player to Game server (through connector)
+
+### Gameplay Related
+* :o: Enter a world
+  * Server
+    * Create basic world -> server -> channel? entities :o:
+  * Client
+    * Display a zone/map from data received
 
 ##Technologies used:
 
