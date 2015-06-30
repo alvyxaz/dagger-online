@@ -25,6 +25,7 @@ class LoginHandler extends ClientMessageHandler{
 
     handleAck(message: Object, sender: Sockets.Socket, callback? : (data: Object) => {}) : Object {
         if (this.isDataValid(message)) {
+
             /*--------------------
              * Logging in as guest
              */
@@ -47,6 +48,7 @@ class LoginHandler extends ClientMessageHandler{
 
             // All the data is valid, we can now save the account to database
             Models.Account.findOne( {'username' : username}, (err : any, account: any) => {
+                console.log("DONE");
                 if (err) {
                     callback(this.generateErrorResponse("Couldn't find a user"));
                     return console.log("Couldn't find a user");

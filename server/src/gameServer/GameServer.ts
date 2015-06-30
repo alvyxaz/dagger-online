@@ -17,6 +17,7 @@ import collections = require('../collections');
 
 // Models
 import User = require('./models/User');
+import World = require('./models/World');
 
 /**
  * Server, responsible for authenticating users and giving them a link to
@@ -32,7 +33,17 @@ class GameServer extends Server {
     private usersById = {};
     private usersByUsername = {};
 
-    constructor(name : string, port: number){ super(ServerType.GameServer, name, port);}
+    public db : DatabaseConnection;
+
+    public world: World;
+
+    constructor(name : string, port: number){
+        super(ServerType.GameServer, name, port);
+
+        // Setup world
+        var world = new World();
+        this.world = world
+    }
 
     public connectUser(username: string, connector: Sockets.Socket) : number {
         var newId = ++this.lastUserId;
@@ -117,6 +128,13 @@ class GameServer extends Server {
                 var handler : ConnectorMessageHandler = new ConnectorMessageHandler(this);
                 this.connectorHandlers[handler.getMessageType()] = handler;
             }
+        });
+    }
+
+    public connectToDatabase(dbAddress: string) : void {
+        this.db = new DatabaseConnection();
+        this.db.connect(dbAddress, () => {
+            console.log("Gameserver connected to database".green);
         });
     }
 }

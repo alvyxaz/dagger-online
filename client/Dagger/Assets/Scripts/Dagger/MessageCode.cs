@@ -6,6 +6,7 @@ public enum MessageCode {
     AssignConnector = 4,
     CredentialsRequest = 5, // Sent by connector
     JoinQueue = 6,
-    ConfirmQueue = 7
+    ConfirmQueue = 7,
+    GameLoad = 8
 }
 

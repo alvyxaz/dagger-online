@@ -51,7 +51,6 @@ class Server <> {
                 console.log(message);
             }
         } catch (exception) {
-            console.log("AND HERE");
             if (ackCallback) {
                 var res = {};
                 res[ParameterCode.Error] = 'Internal server error';

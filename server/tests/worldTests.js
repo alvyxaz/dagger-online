@@ -1,4 +1,3 @@
-/// <reference path='../src/types' />
 var chai = require('chai');
 var should = chai.should();
 var expect = chai.expect;
@@ -18,10 +17,11 @@ describe('World', function () {
     it('Should add and remove Player', function () {
         var world = new World();
         var user = new User(0, 'Dummy');
-        var player = new Player(user);
+        var player = new Player(0, user);
         world.addPlayer(player);
         world.containsPlayer(player).should.equal(true);
         world.removePlayer(player);
         world.containsPlayer(player).should.equal(false);
     });
 });
+//# sourceMappingURL=worldTests.js.map

@@ -35,7 +35,6 @@ public class LoginController : MonoBehaviour, IMessageListener
     {
         // Test
         Connection = FindObjectOfType<ConnectionController>();
-        Debug.Log(Connection);
         var gatewayConnectionListener = new GenericConnectionListener(UpdateConnectionStatus);
         Connection.SetConnectionListener(gatewayConnectionListener);
         gatewayConnectionListener.SetMessageListener(this);

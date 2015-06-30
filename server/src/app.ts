@@ -21,6 +21,7 @@ servers['gatewayServers'].forEach((serverData : any) => {
 
 servers['gameServers'].forEach((serverData : any) => {
     var server = new GameServer(serverData.name, serverData.port);
+    server.connectToDatabase(serverData['databaseAddress']);
     server.start(serverData);
 });
 

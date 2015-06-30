@@ -1,4 +1,3 @@
-/// <reference path='../src/types' />
 var chai = require('chai');
 var _ = require('lodash');
 var should = chai.should();
@@ -12,7 +11,8 @@ var GameObject = require('../src/gameServer/models/GameObject');
 var zoneTemplate = {
     'name': 'Pavadinimas',
     'maxPlayers': 5,
-    'type': ZoneType.World,
+    'type': 0 /* World */,
+    'data': {}
 };
 describe('Zone', function () {
     console.log(zoneTemplate);
@@ -108,30 +108,5 @@ describe('Zone', function () {
             playerA.knownObjects.contains(playerB).should.be.false;
         });
     });
-    //it ('Should add and remove objects', () => {
-    //    var zone = new Zone(template);
-    //    var object = new GameObject();
-    //    var position = new Position(5, 5);
-    //
-    //    zone.addObject(object, position);
-    //    zone.containsObject(object).should.be.true;
-    //    zone.removeObject(object);
-    //    zone.containsObject(object).should.be.false;
-    //});
-    //
-    //it ('Add and remove players', () => {
-    //    var template = _.clone(template);
-    //    template.maxPlayers = 1;
-    //    var zone = new Zone(template);
-    //    var position = new Position(5, 5);
-    //
-    //    var user = new User(0, 'TestUser');
-    //    var player1 = new Player(user);
-    //    var player2 = new Player(user);
-    //
-    //    zone.addPlayer(player1, position).should.be.true;
-    //
-    //    zone.addPlayer(player1, position).should.be.false;
-    //
-    //});
 });
+//# sourceMappingURL=zoneTests.js.map

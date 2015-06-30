@@ -18,7 +18,8 @@ module.exports = {
         'gameServers' : [
             {
                 'name' : 'Europe',
-                'port' : 3001
+                'port' : 3001,
+                'databaseAddress' : 'mongodb://localhost/dagger'
             }
         ],
 

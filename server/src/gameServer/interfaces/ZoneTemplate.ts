@@ -12,6 +12,7 @@ interface ZoneTemplate {
         visibleRange : number;
         forgetRange: number;
     };
+    data: Object;
 }
 
 export = ZoneTemplate;

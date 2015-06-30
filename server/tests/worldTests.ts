@@ -24,7 +24,7 @@ describe('World', () => {
     it('Should add and remove Player', () => {
         var world = new World();
         var user = new User(0, 'Dummy');
-        var player = new Player(user);
+        var player = new Player(0, user);
 
         world.addPlayer(player);
         world.containsPlayer(player).should.equal(true);

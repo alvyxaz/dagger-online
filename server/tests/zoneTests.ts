@@ -17,6 +17,7 @@ var zoneTemplate : ZoneTemplate = {
     'name' : 'Pavadinimas',
     'maxPlayers' : 5,
     'type' : ZoneType.World,
+    'data' : {}
 };
 
 describe('Zone', () => {

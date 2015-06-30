@@ -28,7 +28,11 @@ namespace Assets.Scripts.Dagger.Login.Handlers
                 {
                     Debug.LogWarning(GetErrorMessage(o));
                     Controller.ConnectToGateway();
+                    return;
                 }
+
+                // Successfully logged in to game
+                Application.LoadLevel("loading");
             });
         }
     }
