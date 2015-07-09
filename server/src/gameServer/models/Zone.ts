@@ -18,11 +18,13 @@ class Zone {
 
     private _visibleRange = 30;
     private _forgetRange = 60;
+    private _markedPositions: Array<Object>;
 
     constructor(template: ZoneTemplate) {
         this._template = template;
         this._objects = [];
         this._players = [];
+        this._markedPositions = template.positions;
 
         if (template.area) {
             this._visibleRange = template.area.visibleRange;
@@ -34,6 +36,14 @@ class Zone {
     get name() : string {return this._template.name;}
     get maxPlayers() : number {return this._template.maxPlayers;}
     get type() : ZoneType {return this._template.type;}
+
+    public getPosition (name: string) : Array<number> {
+        var position : Object = _.find(this._markedPositions, (markedPosition) => {
+            return markedPosition['name'] === name;
+        });
+
+        return position ? position['position'] : null;
+    }
 
     public setObjectPosition(object: GameObject, x : number, y: number) {
         var zonePosition: ZonePosition = this._positionData[object.id];

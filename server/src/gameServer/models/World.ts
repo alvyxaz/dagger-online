@@ -3,10 +3,14 @@ import _ = require('lodash');
 
 import GameObject = require('./GameObject');
 import Player =  require('./Player');
+import Zone = require('./Zone');
 
 class World {
     private _tick : number;
     private _players : Array<Player>;
+    private _lastId = 0;
+
+    private _starterZone: Zone;
 
     constructor() {
         this._tick = 0;
@@ -20,18 +24,44 @@ class World {
     }
 
     public removePlayer(player: Player) {
-        var index = this._players.indexOf(player);
-        if (index > -1) {
-            this._players.splice(index, 1);
+        var foundPlayer = _.find(this._players, (tempPlayer) => {
+            return player.username === tempPlayer.username;
+        });
+
+        if (foundPlayer) {
+            var index = this._players.indexOf(foundPlayer);
+            if (index > -1) {
+                this._players.splice(index, 1);
+            }
         }
     }
 
     public containsPlayer(player: Player) {
-        return this._players.indexOf(player) > -1;
+        var player = _.find(this._players, (tempPlayer) => {
+            return player.username === tempPlayer.username;
+        })
+        return player ? true : false;
+    }
+
+    public generateInstanceId() : number  {
+        this._lastId++;
+        return this._lastId;
     }
 
     public updateTick() {
         this._tick += 1;
+    }
+
+    public getStarterZone() : Zone {
+        return this._starterZone;
+    }
+
+    set starterZone(zone: Zone) {
+        if (this._starterZone) {
+            console.log("Started zone was allready added. There might me an error. Zone '".red
+                + this._starterZone.name.cyan + "' changed to '".red + zone.name.cyan + "'".red)
+        }
+        this._starterZone = zone;
     }
 
     get tick() : number {return this._tick;}

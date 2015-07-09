@@ -7,8 +7,15 @@ using UnityEditor;
 using UnityEditor.Sprites;
 
 public class MapEditor : EditorWindow {
-    [MenuItem("Dagger/MapEditor")]
 
+    public string Name = "World";
+    public string MaxPlayers = "100";
+    public string ZoneType = "World";
+
+    public string VisibleRange = "10";
+    public string ForgetRange = "20";
+
+    [MenuItem("Dagger/MapEditor")]
     public static void ShowWindoW()
     {
         EditorWindow.GetWindow(typeof(MapEditor));
@@ -26,7 +33,18 @@ public class MapEditor : EditorWindow {
 
     void OnGUI()
     {
-        GUILayout.Label("Export options", EditorStyles.boldLabel);
+        GUILayout.Label("General Settings", EditorStyles.boldLabel);
+        EditorGUILayout.TextField("Name", Name);
+        EditorGUILayout.TextField("Max Players", MaxPlayers);
+        EditorGUILayout.TextField("Zone Type", ZoneType);
+
+        GUILayout.Label("Area", EditorStyles.boldLabel);
+
+        EditorGUILayout.TextField("Visible Range", VisibleRange);
+        EditorGUILayout.TextField("Forget Range", ForgetRange);
+
+
+        GUILayout.Label("Export Map", EditorStyles.boldLabel);
 
         if (GUILayout.Button("Print JSON"))
         {
@@ -45,6 +63,48 @@ public class MapEditor : EditorWindow {
     }
 
     public JSONObject GenerateJson()
+    {
+        var json = new JSONObject(JSONObject.Type.OBJECT);
+
+        json.AddField("name", Name);
+        json.AddField("maxPlayers", MaxPlayers);
+        json.AddField("type", ZoneType);
+
+        json.AddField("area", new JSONObject(delegate(JSONObject request)
+        {
+            request.AddField("visibleRange", VisibleRange);
+            request.AddField("forgetRange", ForgetRange);
+        }));
+
+
+        json.AddField("positions", GeneratePositionsJson());
+        json.AddField("data", GenerateDataJson());
+        return json;
+    }
+
+    public JSONObject GeneratePositionsJson()
+    {
+        var array = new JSONObject(JSONObject.Type.ARRAY);
+
+        var startPos = GameObject.Find("StartPosition");
+
+        if (startPos)
+        {
+            array.Add(new JSONObject(delegate(JSONObject obj)
+            {
+                obj.AddField("name", "start");
+                obj.AddField("position", startPos.transform.position.ToJson());
+            }));
+        }
+        else
+        {
+            Debug.LogError("No start position found");
+        }
+
+        return array;
+    }
+
+    public JSONObject GenerateDataJson()
     {
         var json = new JSONObject(JSONObject.Type.OBJECT);
         // ----------------------------------------------------
@@ -121,8 +181,12 @@ public class MapEditor : EditorWindow {
 
 public static class Extensions
 {
-    public static string ToJson(this Vector3 vec)
+    public static JSONObject ToJson(this Vector3 vec)
     {
-        return String.Format("[{0},{1},{2}]", vec.x, vec.y, vec.z);
+        var json = new JSONObject(JSONObject.Type.ARRAY);
+        json.Add(vec.x);
+        json.Add(vec.y);
+        json.Add(vec.z);
+        return json;
     }
 }

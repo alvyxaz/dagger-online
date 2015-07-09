@@ -8,6 +8,8 @@ import GameObjectType = require('../enums/GameObjectType');
 class Player extends Character{
     private user: User;
 
+    public username: String;
+
     constructor(instanceId: number, user: User) {
         super(instanceId);
     }

@@ -2,6 +2,7 @@
 import chai = require('chai');
 var should = chai.should();
 var expect = chai.expect;
+import _ = require('lodash');
 
 import World = require('../src/gameServer/models/World');
 import GameObject =  require('../src/gameServer/models/GameObject');
@@ -30,5 +31,17 @@ describe('World', () => {
         world.containsPlayer(player).should.equal(true);
         world.removePlayer(player);
         world.containsPlayer(player).should.equal(false);
+    })
+
+    it ('Should generate unique instance ids', () => {
+        var world = new World();
+
+        var idList = new Array<number>();
+
+        for(var i =0; i < 100; i++) {
+            var newId = world.generateInstanceId();
+            _.include(idList, newId).should.be.false;
+            idList.push(newId);
+        }
     })
 });

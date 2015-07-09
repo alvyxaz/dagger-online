@@ -1,6 +1,7 @@
 var chai = require('chai');
 var should = chai.should();
 var expect = chai.expect;
+var _ = require('lodash');
 var World = require('../src/gameServer/models/World');
 var User = require('../src/gameServer/models/User');
 var Player = require('../src/gameServer/models/Player');
@@ -22,6 +23,15 @@ describe('World', function () {
         world.containsPlayer(player).should.equal(true);
         world.removePlayer(player);
         world.containsPlayer(player).should.equal(false);
+    });
+    it('Should generate unique instance ids', function () {
+        var world = new World();
+        var idList = new Array();
+        for (var i = 0; i < 100; i++) {
+            var newId = world.generateInstanceId();
+            _.include(idList, newId).should.be.false;
+            idList.push(newId);
+        }
     });
 });
 //# sourceMappingURL=worldTests.js.map

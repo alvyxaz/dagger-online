@@ -12,6 +12,10 @@ interface ZoneTemplate {
         visibleRange : number;
         forgetRange: number;
     };
+    positions: [{
+        'name' : string;
+        'position' : Array<Number>;
+    }];
     data: Object;
 }
 

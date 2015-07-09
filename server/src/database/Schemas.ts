@@ -10,6 +10,14 @@ class Schemas {
     }, {
         'collection' : 'accounts'
     });
+
+    public playerSchema : mongoose.Schema = new mongoose.Schema({
+        'username' : {type:  String, unique : true},
+        'position' : mongoose.Schema.Types.Mixed,
+        'zone' : String
+    }, {
+        'collection' : 'players'
+    });
 }
 
 var schemas : Schemas = new Schemas();

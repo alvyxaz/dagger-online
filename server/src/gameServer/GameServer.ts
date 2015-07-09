@@ -18,6 +18,7 @@ import collections = require('../collections');
 // Models
 import User = require('./models/User');
 import World = require('./models/World');
+import Zone = require('./models/Zone');
 
 /**
  * Server, responsible for authenticating users and giving them a link to
@@ -42,7 +43,8 @@ class GameServer extends Server {
 
         // Setup world
         var world = new World();
-        this.world = world
+        this.world = world;
+        world.starterZone = new Zone(require('../../data/maps/world.json'));
     }
 
     public connectUser(username: string, connector: Sockets.Socket) : number {

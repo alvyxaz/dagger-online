@@ -17,15 +17,24 @@ var zoneTemplate : ZoneTemplate = {
     'name' : 'Pavadinimas',
     'maxPlayers' : 5,
     'type' : ZoneType.World,
-    'data' : {}
+    'data' : {},
+    'positions' : [
+        {'name' : 'start', 'position' : [1, 2, 3]}
+    ]
 };
 
 describe('Zone', () => {
-    console.log(zoneTemplate);
+
     it('Should initialize from template', () => {
         var zone : Zone = new Zone(zoneTemplate);
         zone.name.should.equal(zoneTemplate.name);
         zone.type.should.equal(zoneTemplate.type);
+    });
+
+    it('Should initialize from world template', () => {
+        var mapData = require('../data/maps/world.json');
+        var zone = new Zone(mapData);
+        zone.name.should.equal(mapData['name']);
     });
 
     describe('As entity manager', () => {
@@ -130,8 +139,12 @@ describe('Zone', () => {
 
             zone.removePlayer(playerB);
             playerA.knownObjects.contains(playerB).should.be.false;
-        })
+        });
 
+        it ('Should retrieve a position in zone', () => {
+            should.exist(zone.getPosition('start'));
+            should.not.exist(zone.getPosition('randomNonExistingPosition'));
+        });
     });
 
     //it ('Should add and remove objects', () => {

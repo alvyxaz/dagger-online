@@ -12,14 +12,21 @@ var zoneTemplate = {
     'name': 'Pavadinimas',
     'maxPlayers': 5,
     'type': 0 /* World */,
-    'data': {}
+    'data': {},
+    'positions': [
+        { 'name': 'start', 'position': [1, 2, 3] }
+    ]
 };
 describe('Zone', function () {
-    console.log(zoneTemplate);
     it('Should initialize from template', function () {
         var zone = new Zone(zoneTemplate);
         zone.name.should.equal(zoneTemplate.name);
         zone.type.should.equal(zoneTemplate.type);
+    });
+    it('Should initialize from world template', function () {
+        var mapData = require('../data/maps/world.json');
+        var zone = new Zone(mapData);
+        zone.name.should.equal(mapData['name']);
     });
     describe('As entity manager', function () {
         var template = _.clone(zoneTemplate);
@@ -106,6 +113,10 @@ describe('Zone', function () {
             playerB.knownObjects.contains(playerA).should.be.true;
             zone.removePlayer(playerB);
             playerA.knownObjects.contains(playerB).should.be.false;
+        });
+        it('Should retrieve a position in zone', function () {
+            should.exist(zone.getPosition('start'));
+            should.not.exist(zone.getPosition('randomNonExistingPosition'));
         });
     });
 });
