@@ -12,6 +12,8 @@ class World {
 
     private _starterZone: Zone;
 
+    private _zones: Array<Zone> = [];
+
     constructor() {
         this._tick = 0;
         this._players = [];
@@ -39,7 +41,7 @@ class World {
     public containsPlayer(player: Player) {
         var player = _.find(this._players, (tempPlayer) => {
             return player.username === tempPlayer.username;
-        })
+        });
         return player ? true : false;
     }
 
@@ -52,6 +54,12 @@ class World {
         this._tick += 1;
     }
 
+    public getZoneByName(name: string) : Zone {
+        return _.find(this._zones, (zone: Zone) => {
+            zone.name === name;
+        });
+    }
+
     public getStarterZone() : Zone {
         return this._starterZone;
     }
@@ -62,6 +70,7 @@ class World {
                 + this._starterZone.name.cyan + "' changed to '".red + zone.name.cyan + "'".red)
         }
         this._starterZone = zone;
+        this._zones.push(zone);
     }
 
     get tick() : number {return this._tick;}

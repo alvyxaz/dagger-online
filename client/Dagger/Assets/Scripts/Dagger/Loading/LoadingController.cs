@@ -26,6 +26,7 @@ public class LoadingController : MonoBehaviour, IMessageListener
         Connection.SendMessage(MessageCode.GameLoad, new JSONObject(), m =>
         {
             Debug.Log("Loaqding responded");
+            Debug.Log(m.ToString());
         });
 
     }

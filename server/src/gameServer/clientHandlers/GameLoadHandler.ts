@@ -11,6 +11,8 @@ import Sockets = require('../../core/connections/Sockets');
 import ParameterCode = require('../../common/ParameterCode');
 import User = require('../models/User');
 import Player = require('../models/Player');
+import Position = require('../models/Position');
+import Zone = require('../models/Zone');
 
 // Database stuff
 import Models = require('../../database/Models');
@@ -32,20 +34,38 @@ class GameLoadHandler extends GClientMessageHandler{
             var world = this.server.world;
 
             var player = new Player(world.generateInstanceId(), user);
+            var pos = null;
+            var zone: Zone = null;
 
             if (!playerData) {
                 // First time player entered
+                zone = world.getStarterZone();
+                pos = zone.getPosition("start");
             } else {
                 // Restore player data
+                zone = world.getZoneByName(playerData['zone']);
+                pos = playerData['position'];
+            }
+
+            if (!pos || !zone) {
+                console.log("Starter zone not found".red);
+                ackCallback(this.generateErrorResponse("Couldn't find a zone"));
+                return;
             }
 
             // Add it to the world
-            if (!world.containsPlayer(player)) {
-                world.addPlayer(player);
+            if (world.containsPlayer(player)) {
+                console.log("Player is already playing".red);
+                ackCallback(this.generateErrorResponse("Player is already playing"));
+                return;
             }
 
+            world.addPlayer(player);
+            zone.addPlayer(player, new Position(pos[0], pos[1]));
+
             ackCallback({
-                'position' : player.position
+                'position' : player.position,
+                'zone' : zone.name
             });
         });
 
