@@ -21,11 +21,16 @@ class World {
 
     public addPlayer(player: Player) {
         if (!this.containsPlayer(player)) {
+            player.user.currentPlayer = player;
             this._players.push(player);
         }
     }
 
     public removePlayer(player: Player) {
+        if (!player) {
+            return;
+        }
+
         var foundPlayer = _.find(this._players, (tempPlayer) => {
             return player.username === tempPlayer.username;
         });
@@ -35,6 +40,16 @@ class World {
             if (index > -1) {
                 this._players.splice(index, 1);
             }
+        }
+
+        if (player.user.currentPlayer === player) {
+            player.user.currentPlayer = null;
+        }
+    }
+
+    public addZone(zone: Zone) {
+        if (!_.include(this._zones, zone)) {
+            this._zones.push(zone);
         }
     }
 
@@ -56,7 +71,7 @@ class World {
 
     public getZoneByName(name: string) : Zone {
         return _.find(this._zones, (zone: Zone) => {
-            zone.name === name;
+            return zone.name === name;
         });
     }
 

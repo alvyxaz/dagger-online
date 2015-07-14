@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
-class GameController : MonoBehaviour, IMessageListener
+public class GameController : MonoBehaviour, IMessageListener
 {
     public IConnectionController Connection;
 
-    public static GameController Instance;
+    public Player Player;
 
-    void Awake()
-    {
-        Instance = this;
-    }
-
-    void Start()
-    {
+	// Use this for initialization
+	void Start () {
         Connection = FindObjectOfType<ConnectionController>();
 
         if (Connection == null || !Connection.IsConnected)
@@ -25,15 +17,23 @@ class GameController : MonoBehaviour, IMessageListener
             return;
         }
 
-        Connection.SendMessage(MessageCode.GameLoad, new JSONObject(), m =>
-        {
-            Debug.Log("Loaqding responded");
-        });
+        DontDestroyOnLoad(this);
+	    DontDestroyOnLoad(Player);
 
+        // Setup player
+	    Player.transform.position = PersistentData.ZoneLoadData.PlayerPosition;
+
+        Application.LoadLevel("world");
     }
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
 
     public void OnMessageReceived(JSONObject message)
     {
         Debug.Log(message);
     }
+
 }

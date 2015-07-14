@@ -64,6 +64,7 @@ class GameServer extends Server {
             console.log("GS successfully disconnected a user");
             this.usersById[user.id] = undefined;
             this.usersByUsername[user.username] = undefined;
+            this.world.removePlayer(user.currentPlayer);
         } else {
             console.log("Tried to disconnect user, but couldn't find an ID match");
         }

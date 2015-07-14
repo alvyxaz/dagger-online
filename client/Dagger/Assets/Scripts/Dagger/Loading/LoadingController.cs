@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 public class LoadingController : MonoBehaviour, IMessageListener
@@ -25,8 +26,15 @@ public class LoadingController : MonoBehaviour, IMessageListener
 
         Connection.SendMessage(MessageCode.GameLoad, new JSONObject(), m =>
         {
-            Debug.Log("Loaqding responded");
-            Debug.Log(m.ToString());
+            var posData = m.GetField("position");
+            var position = new Vector3(
+                float.Parse(posData[0].ToString()),
+                float.Parse(posData[1].ToString()));
+
+            var loadingData = new ZoneLoadData(position, "Super WOrld", "world");
+            PersistentData.ZoneLoadData = loadingData;
+
+            Application.LoadLevel("gameplay");
         });
 
     }

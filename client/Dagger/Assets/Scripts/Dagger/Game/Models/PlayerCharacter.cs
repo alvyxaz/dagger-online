@@ -6,8 +6,10 @@ using System.Text;
 
 using UnityEngine;
 
-public class CurrentPlayer : GameCharacter
+public class PlayerCharacter : GameCharacter
 {
+    private GameController _controller;
+
     private Vector2 _moveDirection = Vector2.zero;
     private float _movementSpeed = 6f; //3f;
 
@@ -24,6 +26,8 @@ public class CurrentPlayer : GameCharacter
 
     //private Transform _rotationTransform;
     private int _lastScale = 0;
+
+    private JSONObject _positionUpdatePacket;
 
     public float MovementSpeed
     {
@@ -44,6 +48,8 @@ public class CurrentPlayer : GameCharacter
     public override void OnStart()
     {
         base.OnStart();
+
+        _controller = FindObjectOfType<GameController>();
 
         //var feetGlow = GameObject.Find("FeetGlow");
         //if (feetGlow != null)
@@ -69,11 +75,6 @@ public class CurrentPlayer : GameCharacter
 
         //_rigidBody.velocity = _moveDirection * MovementSpeed;
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Attack();
-        }
-
         if (_isMovingLocally)
         {
             gameObject.transform.position = Vector2.MoveTowards(transform.position, _localMovementDestination,
@@ -87,7 +88,7 @@ public class CurrentPlayer : GameCharacter
             _positionChanged = true;
         }
 
-        if ((_moveDirection.x != 0 || _moveDirection.y != 0) && CanMove())
+        if ((_moveDirection.x != 0 || _moveDirection.y != 0))
         {
             //_directionManager.Angle = Mathf.Atan2(_moveDirection.y, _moveDirection.x) * 180 / (float)Math.PI;
             gameObject.transform.Translate(_moveDirection * MovementSpeed * Time.deltaTime);
@@ -128,18 +129,24 @@ public class CurrentPlayer : GameCharacter
             {
                 // TODO SEND POSITION TO SERVER
                 _positionChanged = false;
+                _controller.Connection.SendMessage(MessageCode.PositionUpdate, GeneratePositionUpdatePacket());
             }
         }
     }
 
-    public bool CanMove()
+    public JSONObject GeneratePositionUpdatePacket()
     {
-        return true;
-    }
-
-    public void Attack()
-    {
-        Animator.SetTrigger("Attack");
+        if (!_positionUpdatePacket)
+        {
+            _positionUpdatePacket = new JSONObject();
+            _positionUpdatePacket.SetField("pos", new JSONObject(JSONObject.Type.ARRAY));
+        }
+        _positionUpdatePacket.AddField("pos", delegate(JSONObject o)
+        {
+            o.Add(transform.position.x);
+            o.Add(transform.position.y);
+        });
+        return _positionUpdatePacket;
     }
 
     private bool _isMovingLocally = false;

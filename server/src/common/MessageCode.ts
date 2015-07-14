@@ -7,7 +7,8 @@ enum MessageCode {
     CredentialsRequest = 5, // Sent by connector
     JoinQueue = 6,
     ConfirmQueue = 7,
-    GameLoad = 8
+    GameLoad = 8,
+    PositionUpdate = 9
 }
 
 export = MessageCode;

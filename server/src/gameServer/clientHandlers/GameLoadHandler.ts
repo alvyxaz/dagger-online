@@ -64,16 +64,11 @@ class GameLoadHandler extends GClientMessageHandler{
             zone.addPlayer(player, new Position(pos[0], pos[1]));
 
             ackCallback({
-                'position' : player.position,
-                'zone' : zone.name
+                'position' : player.position.toArray(),
+                'zone' : zone.name,
+                'scene' : zone.template.scene
             });
         });
-
-        var firstTime = true;
-
-        var player = null;
-
-
 
         // RESPONSE
         // Character position

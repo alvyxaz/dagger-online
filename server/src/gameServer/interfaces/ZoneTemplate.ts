@@ -8,6 +8,7 @@ interface ZoneTemplate {
     name: string;
     maxPlayers : number;
     type: ZoneType;
+    scene: string;
     area? : {
         visibleRange : number;
         forgetRange: number;

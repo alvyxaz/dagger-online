@@ -36,6 +36,7 @@ class Zone {
     get name() : string {return this._template.name;}
     get maxPlayers() : number {return this._template.maxPlayers;}
     get type() : ZoneType {return this._template.type;}
+    get template() : ZoneTemplate {return this._template;}
 
     public getPosition (name: string) : Array<number> {
         var position : Object = _.find(this._markedPositions, (markedPosition) => {

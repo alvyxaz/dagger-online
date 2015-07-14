@@ -8,7 +8,7 @@ var mocha = require('gulp-mocha');
 /*
 Constants
  */
-var unityClientSourcePath = '../ client/Dagger/Assets/Scripts/Dagger/'
+var unityClientSourcePath = '../client/Dagger/Assets/Scripts/Dagger/'
 
 /*
 Unity client Functions

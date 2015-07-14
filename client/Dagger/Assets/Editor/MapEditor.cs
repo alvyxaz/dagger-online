@@ -69,6 +69,7 @@ public class MapEditor : EditorWindow {
         json.AddField("name", Name);
         json.AddField("maxPlayers", MaxPlayers);
         json.AddField("type", ZoneType);
+        json.AddField("scene", EditorApplication.currentScene);
 
         json.AddField("area", new JSONObject(delegate(JSONObject request)
         {

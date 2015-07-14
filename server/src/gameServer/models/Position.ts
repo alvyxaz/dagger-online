@@ -33,6 +33,10 @@ class Position {
         this.x += Math.cos(angle) * offset;
         this.y += Math.sin(angle) * offset;
     }
+
+    public toArray() : Array<number> {
+        return [this.pos[0], this.pos[1]];
+    }
 }
 
 export = Position;

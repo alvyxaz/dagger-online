@@ -2,6 +2,7 @@
  * Created by Alvys on 2015-06-14.
  */
 import Sockets = require('../../core/connections/Sockets');
+import Player = require('./Player');
 
 /**
  * Represents a user connected to the gameserver
@@ -10,6 +11,8 @@ class User {
     public id : number;
     public username: string;
     public connectorSocket : Sockets.Socket;
+
+    public currentPlayer : Player;
 
     constructor(id: number, username: string) {
         this.id = id;
