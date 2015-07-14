@@ -1,5 +1,7 @@
 # Dagger Online
 
+![Screenshot](./screen.jpg?raw=true "Screenshot")
+
 A stab at making an online game with node.js backend. Why node.js? Because it's fun to use, 
 easy to prototype with, easy to scale, and cheap to host
 
