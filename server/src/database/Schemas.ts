@@ -16,7 +16,8 @@ class Schemas {
         'position' : mongoose.Schema.Types.Mixed,
         'zone' : String
     }, {
-        'collection' : 'players'
+        'collection' : 'players',
+        'versionKey' : false
     });
 }
 

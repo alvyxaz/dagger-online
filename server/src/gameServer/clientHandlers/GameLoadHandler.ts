@@ -37,10 +37,13 @@ class GameLoadHandler extends GClientMessageHandler{
             var pos = null;
             var zone: Zone = null;
 
+            var isPlayerCreated = false;
+
             if (!playerData) {
                 // First time player entered
                 zone = world.getStarterZone();
                 pos = zone.getPosition("start");
+                isPlayerCreated = true;
             } else {
                 // Restore player data
                 zone = world.getZoneByName(playerData['zone']);
@@ -62,6 +65,11 @@ class GameLoadHandler extends GClientMessageHandler{
 
             world.addPlayer(player);
             zone.addPlayer(player, new Position(pos[0], pos[1]));
+
+            if (isPlayerCreated) {
+                // Save newly created player
+                this.server.persistence.savePlayer(player, true);
+            }
 
             ackCallback({
                 'position' : player.position.toArray(),

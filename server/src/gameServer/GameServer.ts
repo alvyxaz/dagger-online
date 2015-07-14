@@ -1,8 +1,6 @@
 /// <reference path='../types' />
 import _ = require('lodash');
 import fs = require('fs');
-import mongoose = require('mongoose');
-
 import Server = require('../core/servers/Server');
 import ServerType = require('../core/servers/ServerType');
 import SubServerMessage = require('../serverCommon/messages/SubServerMessage');
@@ -12,7 +10,7 @@ import DatabaseConnection = require('../database/DatabaseConnection');
 import GClientMessageHandler = require('./interfaces/GClientMessageHandler');
 import ConnectorMessageHandler = require('./interfaces/ConnectorMessageHandler');
 import GameServerInfoMessage = require('./messages/GameServerInfoMessage');
-
+import Persistence = require('./Persistence');
 import collections = require('../collections');
 
 // Models
@@ -37,6 +35,7 @@ class GameServer extends Server {
     public db : DatabaseConnection;
 
     public world: World;
+    public persistence: Persistence;
 
     constructor(name : string, port: number){
         super(ServerType.GameServer, name, port);
@@ -61,10 +60,11 @@ class GameServer extends Server {
         var user : User = this.usersById[id];
 
         if (user) {
-            console.log("GS successfully disconnected a user");
+            this.persistence.savePlayer(user.currentPlayer);
             this.usersById[user.id] = undefined;
             this.usersByUsername[user.username] = undefined;
             this.world.removePlayer(user.currentPlayer);
+            console.log("GS successfully disconnected a user");
         } else {
             console.log("Tried to disconnect user, but couldn't find an ID match");
         }
@@ -139,6 +139,7 @@ class GameServer extends Server {
         this.db.connect(dbAddress, () => {
             console.log("Gameserver connected to database".green);
         });
+        this.persistence = new Persistence(this.db);
     }
 }
 

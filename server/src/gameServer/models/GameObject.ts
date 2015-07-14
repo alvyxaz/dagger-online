@@ -9,9 +9,12 @@ class GameObject {
     private _instanceId : number;
     private _knownObjects : KnownObjectsList;
 
+    public name: string;
+
     constructor(id: number) {
         this._instanceId = id;
         this._knownObjects = new KnownObjectsList(this);
+        this.name = "Unnamed";
     }
 
     get id() : number {return this._instanceId;}

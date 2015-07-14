@@ -32,7 +32,6 @@ class GameLoadHandler extends GClientMessageHandler{
         var zone = player.zone;
         var posData = message['pos'];
         zone.setObjectPosition(player, posData[0], posData[1]);
-        console.log(posData);
     }
 
 }
