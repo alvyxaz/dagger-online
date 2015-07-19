@@ -29,6 +29,7 @@ class CredentialsRequestHandler extends CClientMessageHandler{
                     sender.setData(SocketData.Username, username);
                     sender.setData(SocketData.IsInGameServer, true);
                     ackCallback({});
+                    this.server.addClientConnectionLink(data['id'], sender);
                     console.log("Connector linked game server to player: ".yellow + username.cyan);
                     return false;
                 } else {

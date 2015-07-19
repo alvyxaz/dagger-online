@@ -7,6 +7,7 @@ enum SubServerParameterCode {
     Connections = 1,
     GameServerInfo = 2,
     PublicAddress = 3,
+    LoginZone = 4
 }
 
 export = SubServerParameterCode;

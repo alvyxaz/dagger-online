@@ -21,7 +21,6 @@ class World {
 
     public addPlayer(player: Player) {
         if (!this.containsPlayer(player)) {
-            player.user.currentPlayer = player;
             this._players.push(player);
         }
     }
@@ -40,10 +39,6 @@ class World {
             if (index > -1) {
                 this._players.splice(index, 1);
             }
-        }
-
-        if (player.user.currentPlayer === player) {
-            player.user.currentPlayer = null;
         }
     }
 
@@ -65,7 +60,7 @@ class World {
         return this._lastId;
     }
 
-    public updateTick() {
+    public updateTick(interval : number) {
         this._tick += 1;
     }
 
@@ -81,11 +76,11 @@ class World {
 
     set starterZone(zone: Zone) {
         if (this._starterZone) {
-            console.log("Started zone was allready added. There might me an error. Zone '".red
+            console.log("Started zone was allready added. There might be an error. Zone '".red
                 + this._starterZone.name.cyan + "' changed to '".red + zone.name.cyan + "'".red)
         }
+        this.addZone(zone);
         this._starterZone = zone;
-        this._zones.push(zone);
     }
 
     get tick() : number {return this._tick;}

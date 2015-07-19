@@ -27,9 +27,7 @@ public class LoadingController : MonoBehaviour, IMessageListener
         Connection.SendMessage(MessageCode.GameLoad, new JSONObject(), m =>
         {
             var posData = m.GetField("position");
-            var position = new Vector3(
-                float.Parse(posData[0].ToString()),
-                float.Parse(posData[1].ToString()));
+            var position = HelperMethods.PositionFromJSONArray(posData);
 
             var loadingData = new ZoneLoadData(position, "Super WOrld", "world");
             PersistentData.ZoneLoadData = loadingData;

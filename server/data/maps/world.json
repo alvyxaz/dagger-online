@@ -7,6 +7,7 @@
     "visibleRange": "10",
     "forgetRange": "20"
   },
+  "templateId" : "world",
   "positions": [
     {
       "name": "start",

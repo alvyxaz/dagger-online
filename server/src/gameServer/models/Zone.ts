@@ -1,16 +1,18 @@
 /// <reference path='../../types' />
 import _ = require('lodash');
 
+import MessageCode = require('../../common/MessageCode');
+
 import GameObject = require('./GameObject');
 import Player = require('./Player');
 import Position = require('./Position');
-import ZoneTemplate = require('../interfaces/ZoneTemplate');
+import ZoneTemplate = require('../templates/ZoneTemplate');
 import ZoneType = require('../enums/ZoneType');
 import GameObjectType = require('../enums/GameObjectType');
 
-var DEFAULT_BLOCK_SIZE = 30;
+import Spawn = require('../modules/Spawn');
 
-class Zone {
+class Zone implements Spawn.SpawnListener {
     private _objects: Array<GameObject>;
     private _players: Array<Player>;
     private _template: ZoneTemplate;
@@ -58,6 +60,11 @@ class Zone {
         var visibleRange = this._visibleRange
         var forgetRange = this._forgetRange;
         var allObjects = this._objects;
+        var isPlayer = owner.type === GameObjectType.Player;
+
+        var showList = [];
+        var removeList = [];
+
         for (var i = 0; i < allObjects.length; i++) {
             var target = allObjects[i];
             if (owner === target) {
@@ -67,13 +74,30 @@ class Zone {
                 // Owner already knows about the target
                 if (owner.position.distanceTo(target.position) > forgetRange) {
                     owner.knownObjects.removeObject(target);
+                    // Notify entities about new object
+                    target.trySendMessage(MessageCode.RemoveObjects, [owner.id]);
+                    if (isPlayer){
+                        removeList.push(target);
+                    }
                 }
             } else {
-                // Owner doesn't know about target
+                // Owner doesn't know about new object
                 if (owner.position.distanceTo(target.position) <= visibleRange) {
                     owner.knownObjects.addObject(target);
+                    target.trySendMessage(MessageCode.ShowObjects, [owner.toJSON()]);
+                    if (isPlayer){
+                        showList.push(target.toJSON());
+                    }
                 }
             }
+        }
+
+        if (isPlayer && showList.length > 0) {
+            (<Player>owner).sendMessage(MessageCode.ShowObjects, showList);
+        }
+
+        if (isPlayer && removeList.length > 0) {
+            (<Player>owner).sendMessage(MessageCode.RemoveObjects, removeList);
         }
     }
 
@@ -120,6 +144,7 @@ class Zone {
         if (this._players.length < this.maxPlayers && !this.containsPlayer(player)) {
             if (this.addObject(player, position)) {
                 this._players.push(player);
+
                 return true;
             }
         }
@@ -136,6 +161,10 @@ class Zone {
 
     public containsPlayer(player: Player) {
         return this._players.indexOf(player) > -1;
+    }
+
+    public onSpawn(obj: Spawn.Spawnable) {
+        var testas = <GameObject> obj;
     }
 }
 

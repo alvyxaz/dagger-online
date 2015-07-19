@@ -6,6 +6,7 @@ import ZoneType = require('../enums/ZoneType');
 
 interface ZoneTemplate {
     name: string;
+    templateId: string;
     maxPlayers : number;
     type: ZoneType;
     scene: string;

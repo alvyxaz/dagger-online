@@ -1,7 +1,12 @@
 import Position = require('./Position');
 import Zone = require('./Zone');
+import Player = require('./Player');
 import KnownObjectsList = require('./KnownObjectsList');
 import GameObjectType = require('../enums/GameObjectType');
+
+import MessageCode = require('../../common/MessageCode');
+
+import Spawn = require('../modules/Spawn');
 
 class GameObject {
     private _position : Position;
@@ -17,6 +22,7 @@ class GameObject {
         this.name = "Unnamed";
     }
 
+    get prefab() : string {return 'Unknown';}
     get id() : number {return this._instanceId;}
     get type() : GameObjectType {return GameObjectType.Any;}
 
@@ -43,6 +49,33 @@ class GameObject {
     public onRemovedFromZone() {
         this._zone = null;
         this._position = null;
+    }
+
+    public toJSON(): Object {
+        return {
+            'name' : this.name,
+            'id' : this.id,
+            'position' : this._position.toArray(),
+            'prefab' : this.prefab
+        }
+    }
+
+    public broadcastPacket(code: MessageCode, packet: Object, includeSelf?: boolean) {
+        var players = this._knownObjects.getPlayers();
+        if (includeSelf && this.type === GameObjectType.Player) {
+            players.push(<Player>this);
+        }
+        players.forEach((player: Player) => {
+            player.user.sendMessage(code, packet);
+        });
+    }
+
+    public trySendMessage(code: MessageCode, packet: Object) {
+        // Does nothing for all except players
+    }
+
+    addRemoveListener(listener: (obj: GameObject) => void): void {
+
     }
 }
 

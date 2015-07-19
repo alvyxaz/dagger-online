@@ -1,10 +1,11 @@
 fileFormatVersion: 2
 guid: 05699008b18e319439f1036d246c3e5f
-timeCreated: 1436850433
+timeCreated: 1436987317
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: character_0
+    21300002: character_1
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -57,6 +58,16 @@ TextureImporter:
         y: 962
         width: 37
         height: 61
+      alignment: 7
+      pivot: {x: .5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: character_1
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 979
+        width: 35
+        height: 43
       alignment: 7
       pivot: {x: .5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

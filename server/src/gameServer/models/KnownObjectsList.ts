@@ -4,6 +4,8 @@
 /// <reference path='../../types' />
 import GameObject = require('./GameObject');
 import GameObjectType = require('../enums/GameObjectType');
+import Player = require('./Player');
+
 import _ = require('lodash');
 
 class KnownObjectsList {
@@ -28,6 +30,28 @@ class KnownObjectsList {
             return true;
         }
         return false;
+    }
+
+    public getPlayers() : Array<Player>{
+        var allObjects = this._objects;
+        var result = [];
+        for(var id in allObjects) {
+            var obj: GameObject = allObjects[id];
+            if (obj && obj.type === GameObjectType.Player) {
+                var player: Player = <Player> obj;
+                result.push(player);
+            }
+        }
+        return result;
+    }
+
+    public getKnownObjects() : Array<GameObject> {
+        var allObjects = this._objects;
+        var result = [];
+        for(var id in allObjects) {
+            result.push(allObjects[id]);
+        }
+        return result;
     }
 
     public removeObject(object: GameObject) : boolean {

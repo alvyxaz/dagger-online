@@ -9,6 +9,7 @@ using UnityEditor.Sprites;
 public class MapEditor : EditorWindow {
 
     public string Name = "World";
+    public string TemplateId = "world";
     public string MaxPlayers = "100";
     public string ZoneType = "World";
 
@@ -35,6 +36,7 @@ public class MapEditor : EditorWindow {
     {
         GUILayout.Label("General Settings", EditorStyles.boldLabel);
         EditorGUILayout.TextField("Name", Name);
+        EditorGUILayout.TextField("TemplateId", TemplateId);
         EditorGUILayout.TextField("Max Players", MaxPlayers);
         EditorGUILayout.TextField("Zone Type", ZoneType);
 
@@ -67,6 +69,7 @@ public class MapEditor : EditorWindow {
         var json = new JSONObject(JSONObject.Type.OBJECT);
 
         json.AddField("name", Name);
+        json.AddField("templateId", TemplateId);
         json.AddField("maxPlayers", MaxPlayers);
         json.AddField("type", ZoneType);
         json.AddField("scene", EditorApplication.currentScene);
@@ -177,17 +180,5 @@ public class MapEditor : EditorWindow {
 
             return json;
         }
-    }
-}
-
-public static class Extensions
-{
-    public static JSONObject ToJson(this Vector3 vec)
-    {
-        var json = new JSONObject(JSONObject.Type.ARRAY);
-        json.Add(vec.x);
-        json.Add(vec.y);
-        json.Add(vec.z);
-        return json;
     }
 }

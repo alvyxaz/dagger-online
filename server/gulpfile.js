@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var gulp = require('gulp');
 var replace = require('gulp-replace');
 var watch = require('gulp-watch');
@@ -67,7 +68,24 @@ gulp.task('default', function () {
 Testing tasks
  */
 
+var handleTestError = function (err) {
+    console.log(err.toString());
+    this.emit('end');
+}
+
+var tests = {
+    'all' : _.debounce(function () {
+        return gulp.src('./tests/tests.js', {read : false})
+            .pipe(mocha({reporter: 'spec'}))
+            .on('error', handleTestError);
+    }, 500)
+}
+
 gulp.task('test', function () {
-   return gulp.src('./tests/tests.js', {read : false})
-       .pipe(mocha({reporter: 'spec'}));
+   return tests['all']();
+});
+
+gulp.task('test.live', function () {
+    watch('./src/**/*.js' ,tests['all']);
+    tests['all']();
 });

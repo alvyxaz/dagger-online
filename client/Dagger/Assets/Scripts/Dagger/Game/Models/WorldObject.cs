@@ -44,12 +44,10 @@ public class WorldObject : MonoBehaviour
 
     public virtual void InitializeFromView(JSONObject view)
     {
-        //this.name = view.InstanceId + "";
-        //Name = view.Name;
-        //ObjectType = view.ObjectType;
-        //InstanceId = view.InstanceId;
-        //transform.position = new Vector2(view.Position.X, view.Position.Y);
-        //Prefab = view.Prefab;
+        Name = view.GetField("name").ToString();
+        InstanceId = Convert.ToInt32(view.GetField("id").ToString());
+        transform.position = HelperMethods.PositionFromJSONArray(view.GetField("position"));
+        Prefab = view.GetField("prefab").ToString();
     }
 
     void OnClick()

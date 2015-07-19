@@ -9,7 +9,7 @@ import Zone = require('../src/gameServer/models/Zone');
 import GameObject =  require('../src/gameServer/models/GameObject');
 import User =  require('../src/gameServer/models/User');
 import Player =  require('../src/gameServer/models/Player');
-import ZoneTemplate = require('../src/gameServer/interfaces/ZoneTemplate');
+import ZoneTemplate = require('../src/gameServer/templates/ZoneTemplate');
 
 describe('World', () => {
     it('Should update tick', () => {
@@ -18,7 +18,7 @@ describe('World', () => {
         var startingTick = world.tick;
 
         for (var i = 0; i < ticksToDo; i++) {
-            world.updateTick();
+            world.updateTick(100);
         }
 
         world.tick.should.equal(ticksToDo + startingTick);
@@ -30,16 +30,13 @@ describe('World', () => {
         var player = new Player(0, user);
 
         // Add player
-        should.not.exist(user.currentPlayer);
         world.containsPlayer(player).should.equal(false);
         world.addPlayer(player);
         world.containsPlayer(player).should.equal(true);
-        user.currentPlayer.should.equal(player);
 
         // Remove player
         world.removePlayer(player);
         world.containsPlayer(player).should.equal(false);
-        should.not.exist(user.currentPlayer);
     });
 
     it ('Should generate unique instance ids', () => {

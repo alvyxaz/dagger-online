@@ -56,9 +56,10 @@ class Server <> {
                 res[ParameterCode.Error] = 'Internal server error';
                 ackCallback(res);
             }
-            console.log((this.name + ': Failed to handle a message "'  + message['o'] + '". Content').red);
+            console.log((this.name + ': Failed to handle a message "'  + message['o'] + '". (exception) Content').red);
             console.log(message);
             console.log(exception);
+            console.trace();
         }
     }
 }

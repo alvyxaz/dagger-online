@@ -18,6 +18,9 @@ import User = require('./models/User');
 import World = require('./models/World');
 import Zone = require('./models/Zone');
 
+// Factories
+import ZoneFactory = require('./Factories/ZoneFactory');
+
 /**
  * Server, responsible for authenticating users and giving them a link to
  * connector
@@ -43,7 +46,16 @@ class GameServer extends Server {
         // Setup world
         var world = new World();
         this.world = world;
-        world.starterZone = new Zone(require('../../data/maps/world.json'));
+
+        var zoneFactory = new ZoneFactory();
+        world.starterZone = zoneFactory.createZone('world');
+        this.startWorldTicks(world, 100);
+    }
+
+    public startWorldTicks(world: World, tickInterval: number) : void {
+        setInterval(() => {
+            world.updateTick(tickInterval);
+        }, tickInterval);
     }
 
     public connectUser(username: string, connector: Sockets.Socket) : number {
@@ -63,6 +75,7 @@ class GameServer extends Server {
             this.persistence.savePlayer(user.currentPlayer);
             this.usersById[user.id] = undefined;
             this.usersByUsername[user.username] = undefined;
+            user.currentPlayer.isInGame = false;
             this.world.removePlayer(user.currentPlayer);
             console.log("GS successfully disconnected a user");
         } else {

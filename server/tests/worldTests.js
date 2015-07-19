@@ -12,7 +12,7 @@ describe('World', function () {
         var ticksToDo = 5;
         var startingTick = world.tick;
         for (var i = 0; i < ticksToDo; i++) {
-            world.updateTick();
+            world.updateTick(100);
         }
         world.tick.should.equal(ticksToDo + startingTick);
     });
@@ -20,14 +20,11 @@ describe('World', function () {
         var world = new World();
         var user = new User(0, 'Dummy');
         var player = new Player(0, user);
-        should.not.exist(user.currentPlayer);
         world.containsPlayer(player).should.equal(false);
         world.addPlayer(player);
         world.containsPlayer(player).should.equal(true);
-        user.currentPlayer.should.equal(player);
         world.removePlayer(player);
         world.containsPlayer(player).should.equal(false);
-        should.not.exist(user.currentPlayer);
     });
     it('Should generate unique instance ids', function () {
         var world = new World();

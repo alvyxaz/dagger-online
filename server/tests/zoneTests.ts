@@ -5,22 +5,31 @@ import _ = require('lodash');
 var should = chai.should();
 var expect = chai.expect;
 
+import MessageCode = require('../src/common/MessageCode');
+
 import Zone = require('../src/gameServer/models/Zone');
-import ZoneTemplate = require('../src/gameServer/interfaces/ZoneTemplate');
+import ZoneTemplate = require('../src/gameServer/templates/ZoneTemplate');
 import Player = require('../src/gameServer/models/Player');
 import User = require('../src/gameServer/models/User');
 import Position = require('../src/gameServer/models/Position');
 import ZoneType = require('../src/gameServer/enums/ZoneType');
 import GameObject =  require('../src/gameServer/models/GameObject');
+import Character =  require('../src/gameServer/models/Character');
 
 var zoneTemplate : ZoneTemplate = {
     'name' : 'Pavadinimas',
+    'templateId' : 'pavadinimas',
     'maxPlayers' : 5,
     'type' : ZoneType.World,
     'data' : {},
+    'scene' : 'world',
     'positions' : [
         {'name' : 'start', 'position' : [1, 2, 3]}
-    ]
+    ],
+    area : {
+        visibleRange: 3,
+        forgetRange : 5
+    }
 };
 
 describe('Zone', () => {
@@ -78,8 +87,8 @@ describe('Zone', () => {
             zone.removeObject(gameObject);
             should.not.exist(gameObject.zone);
             zone.containsObject(gameObject).should.be.false;
-        })
-    })
+        });
+    });
 
     describe('Entities', () => {
         var template : ZoneTemplate = _.clone(zoneTemplate);
@@ -147,31 +156,108 @@ describe('Zone', () => {
         });
     });
 
-    //it ('Should add and remove objects', () => {
-    //    var zone = new Zone(template);
-    //    var object = new GameObject();
-    //    var position = new Position(5, 5);
-    //
-    //    zone.addObject(object, position);
-    //    zone.containsObject(object).should.be.true;
-    //    zone.removeObject(object);
-    //    zone.containsObject(object).should.be.false;
-    //});
-    //
-    //it ('Add and remove players', () => {
-    //    var template = _.clone(template);
-    //    template.maxPlayers = 1;
-    //    var zone = new Zone(template);
-    //    var position = new Position(5, 5);
-    //
-    //    var user = new User(0, 'TestUser');
-    //    var player1 = new Player(user);
-    //    var player2 = new Player(user);
-    //
-    //    zone.addPlayer(player1, position).should.be.true;
-    //
-    //    zone.addPlayer(player1, position).should.be.false;
-    //
-    //});
+    describe('Player', () => {
+        var visibleRange = 10;
+        var forgetRange = 20;
+
+        var template : ZoneTemplate = _.clone(zoneTemplate);
+        template['area'] = {
+            'visibleRange' : visibleRange,
+            'forgetRange' : forgetRange
+        };
+        var zone: Zone = new Zone(template);
+
+        // Main player
+        var user = new User(0, 'alvys');
+        var player = new Player(0, user);
+
+        // Mocking user packet receiver
+        var sendMessage = generateSendMessageMock();
+        var messages = sendMessage['messages'];
+        player.sendMessage = sendMessage['callback'];
+
+        // Creating entities
+        var gameObject = new GameObject(1);
+        gameObject.name = "Object1";
+
+        var gameCharacter = new Character(2);
+        gameCharacter.name = "Object2";
+
+        var userB = new User(1, "Object3");
+        var playerB = new Player(3, userB);
+
+        // Adding entities
+        zone.addObject(gameObject, new Position(0, 0));
+        zone.addObject(gameCharacter, new Position(30, 1)); // Out of visible range
+        zone.addPlayer(playerB, new Position(1, 1));
+
+        zone.addPlayer(player, new Position(2, 2));
+
+
+        it ('Should get a list of visible object when it enters', () => {
+
+            var objectsMessage = _.find(messages, (message) => {
+                return message['code'] === MessageCode.ShowObjects;
+            });
+
+            should.exist(objectsMessage);
+            var objects = objectsMessage['data'];
+
+            // We did receive objects, make sure they are right
+            should.exist(_.find(objects, (o) => {return o['name'] === 'Object1'}));
+            should.exist(_.find(objects, (o) => {return o['name'] === 'Object3'}));
+            should.not.exist(_.find(objects, (o) => {return o['name'] === 'Object2'}));
+
+        });
+
+        it ('Should get a visible object that just came into range', () => {
+            messages.length = 0;
+
+            // Move one of the objects to range
+            zone.setObjectPosition(gameCharacter, 0, 0);
+
+            var objectsMessage = _.find(messages, (message) => {
+                return message['code'] === MessageCode.ShowObjects;
+            });
+
+            var objects = objectsMessage['data'];
+
+            // We should only get one character that moved into range
+            should.not.exist(_.find(objects, (o) => {return o['name'] === 'Object1'}));
+            should.not.exist(_.find(objects, (o) => {return o['name'] === 'Object3'}));
+            should.exist(_.find(objects, (o) => {return o['name'] === 'Object2'}));
+        });
+
+        it ("Should remove a visible object when it's out of range", () => {
+            messages.length = 0;
+
+            // Move one of the objects out of range
+            zone.setObjectPosition(gameObject, 0, 50);
+
+            var objectsMessage = _.find(messages, (message) => {
+                return message['code'] === MessageCode.RemoveObjects;
+            });
+
+            var objects = objectsMessage['data'];
+
+            // We should only get one character that moved out of range
+            should.exist(_.find(objects, (o) => {return o === gameObject.id}));
+            should.not.exist(_.find(objects, (o) => {return o === gameCharacter.id}));
+            should.not.exist(_.find(objects, (o) => {return o === playerB.id}));
+        })
+    });
 
 });
+
+function generateSendMessageMock() {
+    var messages = [];
+    return {
+        'messages' : messages,
+        'callback' : (code: number, message: Object) => {
+            messages.push({
+                'code' : code,
+                'data' : message
+            });
+        }
+    }
+}

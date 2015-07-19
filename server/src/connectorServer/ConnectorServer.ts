@@ -68,6 +68,7 @@ class ConnectorServer extends Server {
                 console.log("Client disconnected");
                 if (client.getData(SocketData.IsInGameServer)) {
                     var id : number = client.getData(SocketData.UserId);
+                    this.removeClientConnectionLink(client.getData(SocketData.UserId));
                     this.sendGameserverMessage(SubServerMessageCode.UserDisconnected, {
                         'id' : client.getData(SocketData.UserId)
                     });
@@ -99,6 +100,12 @@ class ConnectorServer extends Server {
         this.clientConnections[id] = socket;
     }
 
+    public removeClientConnectionLink(id: number) {
+        if (this.clientConnections[id]) {
+            delete this.clientConnections[id];
+        }
+    }
+
     /**
      * Connects to a Game Server
      * @param address
@@ -122,7 +129,31 @@ class ConnectorServer extends Server {
         });
 
         socket.onMessage((data: any, callback: (data: any) => void) => {
-            this.handleMessage(this.handlers, data, socket, callback);
+            if(data['p'] && data['o']) {
+                try {
+                    if (callback) {
+                        console.log("GS should never wait for ack in case of multiple peers".red);
+                        callback({}); // Allow GC to clean it
+                        return;
+                    }
+
+                    var peers : Array<number> = data['p'];
+                    peers.forEach((clientId) => {
+                        var socket : Sockets.Socket= this.clientConnections[clientId];
+                        if (socket) {
+                            delete data['p'];
+                            socket.sendMessage(data['o'], data);
+                        }
+                    })
+                } catch (e) {
+                    console.log("Crashed while trying to pass message: ".red +data['o']+ " to peers: " + data['p']);
+                    console.log(e);
+                    console.trace();
+                }
+                // GS passed a message with a list of peers
+            } else {
+                this.handleMessage(this.handlers, data, socket, callback);
+            }
         });
     }
 
@@ -150,28 +181,7 @@ class ConnectorServer extends Server {
         });
 
         socket.onMessage((data: any, callback: (data: any) => void) => {
-            if(data['p'] && data['o']) {
-                try {
-                    if (callback) {
-                        console.log("GS should never wait for ack in case of multiple peers".red);
-                        callback({}); // Allow GC to clean it
-                        return;
-                    }
-
-                    var peers : Array<number> = data['p'];
-                    peers.forEach((clientId) => {
-                        var socket : Sockets.Socket= this.clientConnections[clientId];
-                        socket.sendMessage(data['o'], data);
-                    })
-                } catch (e) {
-                    console.log("Crashed while trying to pass message: ".red +data['o']+ " to peers: " + data['p']);
-                    console.log(e);
-                    console.trace();
-                }
-                // GS passed a message with a list of peers
-            } else {
-                this.handleMessage(this.handlers, data, socket, callback);
-            }
+            this.handleMessage(this.handlers, data, socket, callback);
         });
     }
 

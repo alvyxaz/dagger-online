@@ -5,6 +5,7 @@
 
 import GClientMessageHandler = require('../interfaces/GClientMessageHandler');
 import SubServerMessageCode = require('../../serverCommon/messages/SubServerMessageCode');
+import SubServerParameterCode = require('../../serverCommon/SubServerParameterCode');
 import MessageCode = require('../../common/MessageCode');
 import GameServer = require('../GameServer');
 import Sockets = require('../../core/connections/Sockets');
@@ -63,8 +64,13 @@ class GameLoadHandler extends GClientMessageHandler{
                 return;
             }
 
+            user.currentPlayer = player;
+            user.setData(SubServerParameterCode.LoginZone, {
+                'zone' : zone,
+                'position' : pos
+            });
+
             world.addPlayer(player);
-            zone.addPlayer(player, new Position(pos[0], pos[1]));
 
             if (isPlayerCreated) {
                 // Save newly created player
@@ -72,7 +78,7 @@ class GameLoadHandler extends GClientMessageHandler{
             }
 
             ackCallback({
-                'position' : player.position.toArray(),
+                'position' : pos,
                 'zone' : zone.name,
                 'scene' : zone.template.scene
             });

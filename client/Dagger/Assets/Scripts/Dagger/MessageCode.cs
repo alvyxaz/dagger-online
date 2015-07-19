@@ -8,6 +8,10 @@ public enum MessageCode {
     JoinQueue = 6,
     ConfirmQueue = 7,
     GameLoad = 8,
-    PositionUpdate = 9
+    PositionUpdate = 9,
+    PlayerInGame = 10,
+    ShowObjects = 11,
+    RemoveObjects = 12,
+    MoveObjects = 13,
 }
 
