@@ -48,6 +48,7 @@ class GameServer extends Server {
         this.world = world;
 
         var zoneFactory = new ZoneFactory();
+        zoneFactory.loadTemplates();
         world.starterZone = zoneFactory.createZone('world');
         this.startWorldTicks(world, 100);
     }

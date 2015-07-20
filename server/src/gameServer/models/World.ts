@@ -5,7 +5,9 @@ import GameObject = require('./GameObject');
 import Player =  require('./Player');
 import Zone = require('./Zone');
 
-class World {
+import IdFactory = require('../factories/IdFactory');
+
+class World implements IdFactory{
     private _tick : number;
     private _players : Array<Player>;
     private _lastId = 0;

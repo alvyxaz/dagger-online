@@ -2,12 +2,17 @@ import Zone = require('../models/Zone');
 
 import ZoneTemplate = require('../templates/ZoneTemplate');
 import ZoneType = require('../enums/ZoneType');
+import Spawn = require('../modules/Spawn');
+
+import ObjectFacory = require('../factories/ObjectFactory');
 
 class ZoneFactory {
     private _templates : Object = {};
 
-    constructor() {
-        this.loadTemplates();
+    private _objectFactory: ObjectFacory;
+
+    constructor(objectFactory: ObjectFacory) {
+        this._objectFactory = objectFactory;
     }
 
     public loadTemplates() : void {
@@ -15,13 +20,30 @@ class ZoneFactory {
         this.addTemplate(require('../../../data/maps/world.json'));
     }
     public createZone(templateId : string): Zone {
-        if (this._templates[templateId]) {
-            return new Zone(this._templates[templateId]);
+        var template: ZoneTemplate = this._templates[templateId];
+
+        if (template) {
+            var zone =  new Zone(template);
+
+            if (template.data.spawns) {
+                template.data.spawns.forEach((spawnData: Spawn.SpawnData) => {
+                    var spawn = new Spawn.SpawnController(spawnData, zone);
+
+                    for (var i = 0; i < spawnData.count; i++) {
+                        var gameObject = this._objectFactory.createObject(spawnData.template);
+                        if (gameObject) {
+                            spawn.addSpawn(gameObject)
+                        }
+                    }
+                });
+            }
+
+            return zone;
         }
         return undefined;
     }
 
-    private addTemplate(template: ZoneTemplate){
+    public addTemplate(template: ZoneTemplate){
         if (this._templates[template.templateId]) {
             console.log('ZoneTemplate with this id is already added: '.red + template.templateId);
             return;
@@ -29,7 +51,7 @@ class ZoneFactory {
         this._templates[template.templateId] = template;
     }
 
-    private getTemplate(templateId: string) {
+    public getTemplate(templateId: string) {
         return this._templates[templateId];
     }
 }

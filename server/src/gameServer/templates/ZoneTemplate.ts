@@ -3,6 +3,7 @@
  */
 
 import ZoneType = require('../enums/ZoneType');
+import Spawn = require('../modules/Spawn');
 
 interface ZoneTemplate {
     name: string;
@@ -18,7 +19,10 @@ interface ZoneTemplate {
         'name' : string;
         'position' : Array<Number>;
     }];
-    data: Object;
+    data: {
+        staticImages? : Array<Object>;
+        spawns? : Array<Spawn.SpawnData>;
+    };
 }
 
 export = ZoneTemplate;

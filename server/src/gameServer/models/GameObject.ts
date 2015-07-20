@@ -7,8 +7,9 @@ import GameObjectType = require('../enums/GameObjectType');
 import MessageCode = require('../../common/MessageCode');
 
 import Spawn = require('../modules/Spawn');
+import ObjectTemplate = require('../templates/ObjectTemplate');
 
-class GameObject {
+class GameObject implements Spawn.Spawnable {
     private _position : Position;
     private _zone : Zone;
     private _instanceId : number;
@@ -16,10 +17,14 @@ class GameObject {
 
     public name: string;
 
-    constructor(id: number) {
+    constructor(id: number, template? : ObjectTemplate) {
         this._instanceId = id;
         this._knownObjects = new KnownObjectsList(this);
         this.name = "Unnamed";
+
+        if (template) {
+            this.name = template.name;
+        }
     }
 
     get prefab() : string {return 'Unknown';}

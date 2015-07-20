@@ -9,6 +9,7 @@ export interface SpawnData {
     width: number;
     height: number;
     count: number;
+    template: string;
 }
 
 /**
